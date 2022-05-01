@@ -1,6 +1,8 @@
 const tileDisplay = document.querySelector('.tile-container')
 const keyboard = document.querySelector('.key-container')
 
+const worlde = 'SUPER'
+
 const keys = [
     'Q',
     'W',
@@ -41,7 +43,10 @@ const guessRows = [
     ['', '', '', '', ''],
 ]
 
-// Create the 6 rows each containing 5 characters.
+let currentRow = 0
+let currentTile = 0
+
+// Create the 6 rows each containing 5 tiles.
 guessRows.forEach((guessRow, guessRowIndex) => {
     const rowElement = document.createElement('div')
     rowElement.setAttribute('id', 'guessRow-' + guessRowIndex)
@@ -54,16 +59,31 @@ guessRows.forEach((guessRow, guessRowIndex) => {
     tileDisplay.append(rowElement)
 })
 
-const handleClick = () => {
-    console.log('clicked')
-}
-
 // Create buttons using the keys array and assign attributes and event listeners.
 // Add buttons to the keyboard container.
 keys.forEach(key => {
     const buttonElement = document.createElement('button')
     buttonElement.textContent = key
     buttonElement.setAttribute('id', key)
-    buttonElement.addEventListener('click', handleClick)
+    buttonElement.addEventListener('click', () => handleClick(key))
     keyboard.append(buttonElement)
 })
+
+const handleClick = (letter) => {
+    console.log('clicked', letter)
+    addLetter(letter)
+}
+
+const addLetter = (letter) => {
+    const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile)
+    tile.textContent = letter;
+
+    // Add the letter to the guess array for later comparison.
+    guessRows[currentRow][currentTile] = letter
+
+    // Add the letter to the data attribute so they can be coloured later.
+    tile.setAttribute('data', letter)
+
+    // Move on to the next tile.
+    currentTile++
+}
