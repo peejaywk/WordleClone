@@ -71,19 +71,42 @@ keys.forEach(key => {
 
 const handleClick = (letter) => {
     console.log('clicked', letter)
+    if (letter === '<') {
+        deleteLetter()
+        return
+    }
+    if (letter === 'ENTER') {
+        console.log('check row')
+        return
+    }
     addLetter(letter)
 }
 
 const addLetter = (letter) => {
-    const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile)
-    tile.textContent = letter;
+    if (currentTile < 5 && currentRow < 6) {
+        const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile)
+        tile.textContent = letter;
+    
+        // Add the letter to the guess array for later comparison.
+        guessRows[currentRow][currentTile] = letter
+    
+        // Add the letter to the data attribute so they can be coloured later.
+        tile.setAttribute('data', letter)
+    
+        // Move on to the next tile.
+        currentTile++
+    }    
+}
 
-    // Add the letter to the guess array for later comparison.
-    guessRows[currentRow][currentTile] = letter
-
-    // Add the letter to the data attribute so they can be coloured later.
-    tile.setAttribute('data', letter)
-
-    // Move on to the next tile.
-    currentTile++
+const deleteLetter = () => {
+    if (currentTile > 0) {
+        // Go to the previous tile.
+        currentTile--
+        const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile)
+        
+        // Remove deleted text from the guess, text content and data attribute
+        tile.textContent = ''
+        guessRows[currentRow][currentTile] = ''
+        tile.setAttribute('data', '')
+    }
 }
