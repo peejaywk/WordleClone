@@ -1,7 +1,8 @@
 const tileDisplay = document.querySelector('.tile-container')
 const keyboard = document.querySelector('.key-container')
+const messageDisplay = document.querySelector('.message-container')
 
-const worlde = 'SUPER'
+const wordle = 'SUPER'
 
 const keys = [
     'Q',
@@ -76,7 +77,7 @@ const handleClick = (letter) => {
         return
     }
     if (letter === 'ENTER') {
-        console.log('check row')
+        checkRow()
         return
     }
     addLetter(letter)
@@ -109,4 +110,25 @@ const deleteLetter = () => {
         guessRows[currentRow][currentTile] = ''
         tile.setAttribute('data', '')
     }
+}
+
+const checkRow = () => {
+    const guess = guessRows[currentRow].join('')
+
+    if (currentTile === 5) {
+        console.log('guess is ' + guess, 'wordle is ' + wordle)
+        if (wordle == guess) {
+            showMessage('Magnificent!')
+        }
+    }
+}
+
+// Show message in the message bar.
+const showMessage = (message) => {
+    const messageElement = document.createElement('p')
+    messageElement.textContent = message
+    messageDisplay.append(messageElement)
+
+    // Set timer to remove the message after 2 seconds.
+    setTimeout(() => messageDisplay.removeChild(messageElement), 2000)
 }
