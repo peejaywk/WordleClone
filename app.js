@@ -46,6 +46,7 @@ const guessRows = [
 
 let currentRow = 0
 let currentTile = 0
+let isGameOver = false
 
 // Create the 6 rows each containing 5 tiles.
 guessRows.forEach((guessRow, guessRowIndex) => {
@@ -115,10 +116,23 @@ const deleteLetter = () => {
 const checkRow = () => {
     const guess = guessRows[currentRow].join('')
 
-    if (currentTile === 5) {
+    if (currentTile > 4) {
         console.log('guess is ' + guess, 'wordle is ' + wordle)
+        flipTile()
         if (wordle == guess) {
             showMessage('Magnificent!')
+            isGameOver = true
+            return
+        } else {
+            if (currentRow >= 5) {
+                isGameOver = true
+                showMessage('Game Over')
+                return
+            }
+            if (currentRow < 5) {
+                currentRow++
+                currentTile = 0
+            }
         }
     }
 }
@@ -131,4 +145,19 @@ const showMessage = (message) => {
 
     // Set timer to remove the message after 2 seconds.
     setTimeout(() => messageDisplay.removeChild(messageElement), 2000)
+}
+
+const flipTile = () => {
+    const rowTiles = document.querySelector('#guessRow-' + currentRow).childNodes
+    rowTiles.forEach((tile, index) => {
+        const dataLetter = tile.getAttribute('data')
+
+        if (dataLetter == wordle[index]) {
+            tile.classList.add('green-overlay')
+        } else if (wordle.includes(dataLetter)) {
+            tile.classList.add('yellow-overlay')
+        } else {
+            tile.classList.add('grey-overlay')
+        }
+    })
 }
